@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 169524505}
   - component: {fileID: 169524507}
   - component: {fileID: 169524506}
+  - component: {fileID: 169524508}
   m_Layer: 0
   m_Name: Square
   m_TagString: Target
@@ -185,7 +186,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -253,6 +254,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &169524508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169524504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a814b3d3e5ce440a3abf11cc281cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Points: 10
+  RespawnTime: 5
 --- !u!1 &199096461
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,6 +700,7 @@ GameObject:
   - component: {fileID: 779366062}
   - component: {fileID: 779366064}
   - component: {fileID: 779366063}
+  - component: {fileID: 779366065}
   m_Layer: 0
   m_Name: Square (2)
   m_TagString: Target
@@ -736,7 +752,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -804,6 +820,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &779366065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779366061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a814b3d3e5ce440a3abf11cc281cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Points: 10
+  RespawnTime: 5
 --- !u!1 &813777290
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +845,7 @@ GameObject:
   - component: {fileID: 813777291}
   - component: {fileID: 813777293}
   - component: {fileID: 813777292}
+  - component: {fileID: 813777294}
   m_Layer: 0
   m_Name: Square (1)
   m_TagString: Target
@@ -866,7 +897,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -934,6 +965,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &813777294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813777290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a814b3d3e5ce440a3abf11cc281cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Points: 10
+  RespawnTime: 5
 --- !u!1 &1051731795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,7 +1251,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1225,6 +1270,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movSpeed: 1
+  bulletCount: 6
+  bulletMax: 6
+  reloadTime: 0.5
 --- !u!212 &1068657658
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1292,7 +1340,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1302,7 +1350,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!1 &1117774402
 GameObject:
@@ -1717,6 +1765,7 @@ GameObject:
   - component: {fileID: 1446504632}
   - component: {fileID: 1446504634}
   - component: {fileID: 1446504633}
+  - component: {fileID: 1446504635}
   m_Layer: 0
   m_Name: Square (3)
   m_TagString: Target
@@ -1768,7 +1817,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1836,6 +1885,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1446504635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446504631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a814b3d3e5ce440a3abf11cc281cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Points: 10
+  RespawnTime: 5
 --- !u!1 &1541102575
 GameObject:
   m_ObjectHideFlags: 0
