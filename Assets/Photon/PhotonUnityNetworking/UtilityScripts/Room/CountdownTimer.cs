@@ -41,14 +41,13 @@ namespace Photon.Pun.UtilityScripts
 
         public const string CountdownStartTime = "StartTime";
 
-        [Header("Countdown time in seconds")] 
-        public float Countdown = 5.0f;
+        [Header("Countdown time in seconds")]
+        private float Countdown = 30f;
 
         private bool isTimerRunning;
 
         private int startTime;
 
-        [Header("Reference to a Text component for visualizing the countdown")]
         public Text Text;
 
 
@@ -119,6 +118,12 @@ namespace Photon.Pun.UtilityScripts
 
         private void Initialize()
         {
+            if (PhotonNetwork.CurrentRoom == null)
+            {
+                Debug.LogWarning("Cannot initialize CountdownTimer: not connected to a room.");
+                return;
+            }
+
             int propStartTime;
             if (TryGetStartTime(out propStartTime))
             {
