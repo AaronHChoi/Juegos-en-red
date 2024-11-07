@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     Vector2 position = new Vector2(0f, 0f);
 
     private bool isCollidingWithTarget = false;
-    private GameObject targetObject;
+    private TargetStats targetStats;
 
     public float bulletCount;
     public float bulletMax = 6;
@@ -63,9 +63,9 @@ public class PlayerMovement : MonoBehaviour
                 points++;
                 bulletCount--;
                 Debug.Log("Hit. Current Bullets: " + bulletCount);
-                if (targetObject != null)
+                if (targetStats != null)
                 {
-                    targetObject.SetActive(false);
+                    targetStats.Hit();
                 }
             }
             else if (Mouse.current.leftButton.wasPressedThisFrame && !isCollidingWithTarget)
@@ -76,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Debug.Log("No bullets left!");
+            //Debug.Log("No bullets left!");
         }
     }
 
@@ -85,7 +85,8 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Target"))
         {
             isCollidingWithTarget = true;
-            targetObject = other.gameObject;
+            targetStats = other.GetComponent<TargetStats>();
+
         }
     }
 
@@ -94,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Target"))
         {
             isCollidingWithTarget = false;
-            targetObject = null;
+            targetStats = null;
         }
     }
 

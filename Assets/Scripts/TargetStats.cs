@@ -5,36 +5,58 @@ using UnityEngine;
 public class TargetStats : MonoBehaviour
 {
     public int Points = 10;
-    public int RespawnTime = 5;
+    private SpriteRenderer spriteRenderer;
+    private BoxCollider2D boxCollider;
+    private TargetManager targetManager;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
-    }
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
+        targetManager = FindObjectOfType<TargetManager>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer component is missing on " + gameObject.name);
+        }
+        if (boxCollider == null)
+        {
+            Debug.LogError("BoxCollider2D component is missing on " + gameObject.name);
+        }
+        if (targetManager == null)
+        {
+            Debug.LogError("TargetManager is not found in the scene.");
+        }
     }
 
     public void Hit()
     {
         Debug.Log("hit");
-        gameObject.SetActive(false);
+        DisableTarget();
+        targetManager.RespawnTarget(gameObject);
     }
 
-    public void Respawn()
+    private void DisableTarget()
     {
-        Debug.Log("respawning");
-        StartCoroutine(RespawnCoroutine());
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = false;
+        }
+        if (boxCollider != null)
+        {
+            boxCollider.enabled = false;
+        }
     }
 
-    private IEnumerator RespawnCoroutine()
+    public void EnableTarget()
     {
-        yield return new WaitForSeconds(RespawnTime);
-
-        gameObject.SetActive(true);
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+        }
+        if (boxCollider != null)
+        {
+            boxCollider.enabled = true;
+        }
     }
 }
