@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     public float reloadTime = 0.5f;
     private bool isReloading = false;
 
+    public int points;
+
 
     private void Start()
     {
@@ -58,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Mouse.current.leftButton.wasPressedThisFrame && isCollidingWithTarget)
             {
+                points++;
                 bulletCount--;
                 Debug.Log("Hit. Current Bullets: " + bulletCount);
                 if (targetObject != null)
