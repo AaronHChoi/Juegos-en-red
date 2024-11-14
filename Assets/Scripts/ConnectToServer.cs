@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
+    private void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
 
     private void Start()
     {

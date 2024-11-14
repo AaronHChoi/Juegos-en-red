@@ -6,19 +6,40 @@ using Photon.Realtime;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    public void JoinOrCreateRoom()
+    void Start()
     {
+        Connect();
+    }
 
-       PhotonNetwork.JoinRandomRoom();
+    private void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
+
+    public void Connect()
+    {
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public void Play()
+    {
+        PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions { MaxPlayers = 2 });
+        Debug.Log("No room available, creating a new room");
+
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 2 });
     }
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("GameScene");
+        Debug.Log("Joined room");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("GameScene");
+        }
     }
+
 }
