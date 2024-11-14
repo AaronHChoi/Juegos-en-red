@@ -32,6 +32,13 @@ public class TargetStats : MonoBehaviour
     public void Hit()
     {
         Debug.Log("hit");
+
+        if (gameObject.CompareTag("ShotgunPowerup"))
+        {
+            // Special effect logic for ShotgunPowerup
+            ActivateShotgunPowerup();
+        }
+
         DisableTarget();
         targetManager.RespawnTarget(gameObject);
     }
@@ -59,4 +66,12 @@ public class TargetStats : MonoBehaviour
             boxCollider.enabled = true;
         }
     }
+
+    private void ActivateShotgunPowerup()
+    {
+        Debug.Log("Shotgun power-up activated!");
+        FindObjectOfType<PlayerMovement>().ActivateShotgunReticle();
+    }
+
+
 }
