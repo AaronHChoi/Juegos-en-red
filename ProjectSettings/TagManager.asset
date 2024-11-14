@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Target
+  - Hittable
+  - Damage
+  - ShotgunPowerup
   layers:
   - Default
   - TransparentFX

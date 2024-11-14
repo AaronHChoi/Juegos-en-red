@@ -6,6 +6,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private SpriteRenderer reticleRenderer;
+
+    public Sprite defaultCrosshair;                         // Default crosshair sprite 
+    public Sprite shotgunCrosshair;                         // Shotgun crosshair sprite 
+    public float shotgunCrosshairDuration = 4f;             // Duration to show shotgun crosshair
+
+
+
+    public float shotgunColliderMultiplier = 4f; // Multiplier for shotgun collider size
+    private CircleCollider2D playerCollider; // Reference to the CircleCollider2D
+    private float originalColliderRadius; // Store the original radius to reset later
+
+
+
     Vector3 mousePosition;
     public float movSpeed = 1f;
     Vector2 position = new Vector2(0f, 0f);
@@ -25,7 +39,13 @@ public class PlayerMovement : MonoBehaviour
     {
         Cursor.visible = false;
         bulletCount = bulletMax;
+
+        reticleRenderer = GetComponent<SpriteRenderer>();
+        playerCollider = GetComponent<CircleCollider2D>(); // Get the CircleCollider2D component
+        originalColliderRadius = playerCollider.radius; // Store the original radius
     }
+
+
 
     void Update()
     {
@@ -82,13 +102,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Target"))
+        if (other.gameObject.CompareTag("Target") || other.gameObject.CompareTag("ShotgunPowerup"))
         {
             isCollidingWithTarget = true;
             targetStats = other.GetComponent<TargetStats>();
-
         }
     }
+
 
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -112,5 +132,31 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isReloading = false;
+    }
+
+    public void ActivateShotgunReticle()
+    {
+        // Change the reticle to the shotgun crosshair
+        reticleRenderer.sprite = shotgunCrosshair;
+
+        // Scale up the collider radius for shotgun power-up
+        playerCollider.radius = 3;
+
+        // Start coroutine to revert back to default settings after the duration
+        StartCoroutine(RevertToDefaultCrosshair());
+    }
+
+
+
+    private IEnumerator RevertToDefaultCrosshair()
+    {
+        // Wait for the specified duration
+        yield return new WaitForSeconds(shotgunCrosshairDuration);
+
+        // Revert to the default crosshair
+        reticleRenderer.sprite = defaultCrosshair;
+
+        // Reset collider radius back to the original
+        playerCollider.radius = originalColliderRadius;
     }
 }
