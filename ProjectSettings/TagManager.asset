@@ -8,6 +8,8 @@ TagManager:
   - Hittable
   - Damage
   - ShotgunPowerup
+  - Bullet
+  - BulletPowerup
   layers:
   - Default
   - TransparentFX
