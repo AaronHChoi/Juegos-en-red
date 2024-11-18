@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 17071667}
   - component: {fileID: 17071666}
   - component: {fileID: 17071665}
+  - component: {fileID: 17071668}
   m_Layer: 0
   m_Name: Square (7)
   m_TagString: Target
@@ -267,6 +268,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &17071668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17071663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 13
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &29159225
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +401,7 @@ GameObject:
   - component: {fileID: 169524507}
   - component: {fileID: 169524506}
   - component: {fileID: 169524508}
+  - component: {fileID: 169524509}
   m_Layer: 0
   m_Name: Square
   m_TagString: Target
@@ -510,6 +534,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Points: 10
+--- !u!114 &169524509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169524504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 12
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &199096461
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,6 +636,7 @@ GameObject:
   - component: {fileID: 227640108}
   - component: {fileID: 227640107}
   - component: {fileID: 227640106}
+  - component: {fileID: 227640109}
   m_Layer: 0
   m_Name: Square (6)
   m_TagString: Target
@@ -722,6 +769,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &227640109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227640104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 11
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &260670178
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,6 +869,7 @@ GameObject:
   - component: {fileID: 374923679}
   - component: {fileID: 374923678}
   - component: {fileID: 374923677}
+  - component: {fileID: 374923680}
   m_Layer: 5
   m_Name: Time Canvas
   m_TagString: Untagged
@@ -891,6 +961,29 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &374923680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374923675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 117978650}
+  sceneViewId: 15
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &475639416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1540,6 +1633,7 @@ GameObject:
   - component: {fileID: 779366064}
   - component: {fileID: 779366063}
   - component: {fileID: 779366065}
+  - component: {fileID: 779366066}
   m_Layer: 0
   m_Name: Square (2)
   m_TagString: Target
@@ -1672,6 +1766,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Points: 10
+--- !u!114 &779366066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779366061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 10
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &813777290
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,6 +1800,7 @@ GameObject:
   - component: {fileID: 813777293}
   - component: {fileID: 813777292}
   - component: {fileID: 813777294}
+  - component: {fileID: 813777295}
   m_Layer: 0
   m_Name: Square (1)
   m_TagString: Target
@@ -1816,6 +1933,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Points: 10
+--- !u!114 &813777295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813777290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 9
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &837885984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,6 +2017,7 @@ GameObject:
   - component: {fileID: 845639649}
   - component: {fileID: 845639648}
   - component: {fileID: 845639647}
+  - component: {fileID: 845639650}
   m_Layer: 0
   m_Name: ShotgunPowerup
   m_TagString: ShotgunPowerup
@@ -2010,6 +2150,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &845639650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845639645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 8
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &901658717
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,6 +2318,7 @@ GameObject:
   - component: {fileID: 1051731799}
   - component: {fileID: 1051731798}
   - component: {fileID: 1051731797}
+  - component: {fileID: 1051731800}
   m_Layer: 5
   m_Name: Player Scores Canvas
   m_TagString: Untagged
@@ -2250,6 +2413,29 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1051731800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051731795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 837885986}
+  sceneViewId: 14
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1067895177
 GameObject:
   m_ObjectHideFlags: 0
@@ -2262,6 +2448,7 @@ GameObject:
   - component: {fileID: 1067895181}
   - component: {fileID: 1067895180}
   - component: {fileID: 1067895179}
+  - component: {fileID: 1067895182}
   m_Layer: 0
   m_Name: Bullets Canvas
   m_TagString: Untagged
@@ -2354,6 +2541,29 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1067895182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067895177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 982302204}
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1153900469
 GameObject:
   m_ObjectHideFlags: 0
@@ -2533,6 +2743,7 @@ GameObject:
   - component: {fileID: 1155937483}
   - component: {fileID: 1155937482}
   - component: {fileID: 1155937481}
+  - component: {fileID: 1155937484}
   m_Layer: 0
   m_Name: Square (4)
   m_TagString: Target
@@ -2665,6 +2876,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1155937484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155937479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 7
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1397580624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2895,6 +3128,7 @@ GameObject:
   - component: {fileID: 1446504634}
   - component: {fileID: 1446504633}
   - component: {fileID: 1446504635}
+  - component: {fileID: 1446504636}
   m_Layer: 0
   m_Name: Square (3)
   m_TagString: Target
@@ -3027,6 +3261,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Points: 10
+--- !u!114 &1446504636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446504631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 6
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1541102575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3248,6 +3504,7 @@ GameObject:
   - component: {fileID: 1839267409}
   - component: {fileID: 1839267408}
   - component: {fileID: 1839267407}
+  - component: {fileID: 1839267410}
   m_Layer: 0
   m_Name: Square (5)
   m_TagString: Target
@@ -3380,6 +3637,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1839267410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839267405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 5
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1931955953
 GameObject:
   m_ObjectHideFlags: 0
@@ -3791,6 +4070,7 @@ GameObject:
   - component: {fileID: 2112165940}
   - component: {fileID: 2112165939}
   - component: {fileID: 2112165942}
+  - component: {fileID: 2112165943}
   m_Layer: 0
   m_Name: BulletPowerup
   m_TagString: BulletPowerup
@@ -3950,6 +4230,28 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &2112165943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112165937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 4
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2141814309
 GameObject:
   m_ObjectHideFlags: 0
