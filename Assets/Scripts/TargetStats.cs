@@ -1,7 +1,7 @@
-using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
-public class TargetStats : MonoBehaviour
+public class TargetStats : MonoBehaviourPunCallbacks
 {
     public int Points = 10;
     private SpriteRenderer spriteRenderer;
@@ -30,31 +30,25 @@ public class TargetStats : MonoBehaviour
 
     public void Hit()
     {
+        photonView.RPC("HandleHit", RpcTarget.All); // Sync hit across all players
+    }
+
+    [PunRPC]
+    private void HandleHit()
+    {
         Debug.Log("Hit detected on target with tag: " + gameObject.tag);
 
         if (gameObject.CompareTag("ShotgunPowerup"))
         {
-            ActivateShotgunPowerup();
+            FindObjectOfType<PlayerMovement>().ActivateShotgunReticle();
         }
         else if (gameObject.CompareTag("BulletPowerup"))
         {
-            ActivateBulletPowerup();
+            FindObjectOfType<PlayerMovement>().ActivateTemporaryBulletPowerup();
         }
 
         DisableTarget();
-        targetManager.RespawnTarget(gameObject);
-    }
-
-    private void ActivateShotgunPowerup()
-    {
-        Debug.Log("Shotgun power-up activated!");
-        FindObjectOfType<PlayerMovement>().ActivateShotgunReticle();
-    }
-
-    private void ActivateBulletPowerup()
-    {
-        Debug.Log("Bullet power-up activated!");
-        FindObjectOfType<PlayerMovement>().ActivateTemporaryBulletPowerup();
+        targetManager.RespawnTarget(gameObject); // Respawn the target
     }
 
     private void DisableTarget()
@@ -81,3 +75,4 @@ public class TargetStats : MonoBehaviour
         }
     }
 }
+

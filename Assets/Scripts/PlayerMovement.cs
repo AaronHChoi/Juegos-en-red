@@ -1,34 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Linq;
+using Photon.Pun;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
 {
     private SoundManager soundManager;
     private SpriteRenderer reticleRenderer;
 
-
-    public Sprite defaultCrosshair;                         // Default crosshair sprite 
-    public Sprite shotgunCrosshair;                         // Shotgun crosshair sprite 
-    public float shotgunCrosshairDuration = 4f;             // Duration to show shotgun crosshair
+    public Sprite defaultCrosshair; // Default crosshair sprite
+    public Sprite shotgunCrosshair; // Shotgun crosshair sprite
+    public float shotgunCrosshairDuration = 4f; // Duration for shotgun crosshair
     public float shotgunColliderMultiplier = 4f; // Multiplier for shotgun collider size
-    private bool isShotgunActive = false; // Tracks whether the shotgun power-up is active
-    private CircleCollider2D playerCollider; // Reference to the CircleCollider2D
-    private float originalColliderRadius; // Store the original radius to reset later
-
-
+    private bool isShotgunActive = false; // Tracks if shotgun power-up is active
+    private CircleCollider2D playerCollider;
+    private float originalColliderRadius;
 
     Vector3 mousePosition;
     public float movSpeed = 1f;
     Vector2 position = new Vector2(0f, 0f);
 
-    private bool isCollidingWithTarget = false;
-    private TargetStats targetStats;
     private List<TargetStats> collidingTargets = new List<TargetStats>();
-
 
     public float bulletCount;
     public float bulletMax = 6;
@@ -37,7 +30,8 @@ public class PlayerMovement : MonoBehaviour
 
     public int points;
 
-
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
 
     private void Start()
     {
@@ -45,17 +39,17 @@ public class PlayerMovement : MonoBehaviour
         bulletCount = bulletMax;
 
         reticleRenderer = GetComponent<SpriteRenderer>();
-        playerCollider = GetComponent<CircleCollider2D>(); // Get the CircleCollider2D component
+        playerCollider = GetComponent<CircleCollider2D>();
         soundManager = FindObjectOfType<SoundManager>();
-        originalColliderRadius = playerCollider.radius; // Store the original radius
+        originalColliderRadius = playerCollider.radius;
     }
-
-
 
     void Update()
     {
+        if (!photonView.IsMine) return; // Only local player controls its behavior
+
         MouseMovement();
-        
+
         if (Input.GetKeyDown(KeyCode.Space) && !isReloading && bulletCount < bulletMax)
         {
             StartCoroutine(ReloadOneBullet());
@@ -64,15 +58,8 @@ public class PlayerMovement : MonoBehaviour
         Shoot();
     }
 
-    private void FixedUpdate()
-    {
-        // Movement
-        transform.position = position;
-    }
-
     private void MouseMovement()
     {
-        // Movement
         mousePosition = Input.mousePosition;
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         position = Vector2.Lerp(transform.position, mousePosition, movSpeed);
@@ -82,13 +69,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (bulletCount > 0 && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            soundManager.PlaySound(isShotgunActive ? "ShotgunShotSound" : "ShotSound");
+            // Sync the shot sound across all players
+            photonView.RPC("PlayShotSound", RpcTarget.All, isShotgunActive);
 
             if (collidingTargets.Count > 0)
             {
-                foreach (var target in collidingTargets.ToList()) // Use ToList() to avoid modification during iteration
+                foreach (var target in collidingTargets.ToArray())
                 {
-                    target.Hit(); // Apply the hit effect to the target
+                    target.Hit(); // Apply the hit effect
                     points++;
                 }
             }
@@ -98,13 +86,15 @@ public class PlayerMovement : MonoBehaviour
             }
 
             bulletCount--;
-            Debug.Log("Shot fired. Remaining bullets: " + bulletCount);
+            Debug.Log($"Shot fired. Remaining bullets: {bulletCount}");
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Target") || other.gameObject.CompareTag("ShotgunPowerup") || other.gameObject.CompareTag("BulletPowerup"))
+        if (other.gameObject.CompareTag("Target") ||
+            other.gameObject.CompareTag("ShotgunPowerup") ||
+            other.gameObject.CompareTag("BulletPowerup"))
         {
             var target = other.GetComponent<TargetStats>();
             if (target != null && !collidingTargets.Contains(target))
@@ -112,16 +102,15 @@ public class PlayerMovement : MonoBehaviour
                 collidingTargets.Add(target);
             }
         }
-        else if (other.gameObject.CompareTag("ShotgunPowerup"))
-        {
-            // Handle shotgun power-up activation here if needed
-        }
     }
+
 
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Target") || other.gameObject.CompareTag("ShotgunPowerup") || other.gameObject.CompareTag("BulletPowerup"))
+        if (other.gameObject.CompareTag("Target") ||
+            other.gameObject.CompareTag("ShotgunPowerup") ||
+            other.gameObject.CompareTag("BulletPowerup"))
         {
             var target = other.GetComponent<TargetStats>();
             if (target != null)
@@ -131,11 +120,29 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+    [PunRPC]
+    private void PlayShotSound(bool shotgunActive)
+    {
+        soundManager.PlaySound(shotgunActive ? "ShotgunShotSound" : "ShotSound");
+    }
+
+    private void FixedUpdate()
+    {
+        if (photonView.IsMine)
+        {
+            transform.position = position;
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * 10);
+            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.fixedDeltaTime * 10);
+        }
+    }
+
     private IEnumerator ReloadOneBullet()
     {
         isReloading = true;
-        Debug.Log("Reloading one bullet...");
-
         yield return new WaitForSeconds(reloadTime);
 
         if (bulletCount < bulletMax)
@@ -148,34 +155,30 @@ public class PlayerMovement : MonoBehaviour
 
     public void ActivateShotgunReticle()
     {
-        // Flag
         isShotgunActive = true;
-
-        // Change the reticle to the shotgun crosshair
         reticleRenderer.sprite = shotgunCrosshair;
 
-        // Scale up the collider radius for shotgun power-up
-        playerCollider.radius = 3;
+        playerCollider.radius = shotgunColliderMultiplier;
 
-        // Start coroutine to revert back to default settings after the duration
+        // Broadcast shotgun activation
+        photonView.RPC("SyncShotgunActivation", RpcTarget.All, true);
+
         StartCoroutine(RevertToDefaultCrosshair());
     }
 
-
+    [PunRPC]
+    private void SyncShotgunActivation(bool active)
+    {
+        isShotgunActive = active;
+        reticleRenderer.sprite = active ? shotgunCrosshair : defaultCrosshair;
+        playerCollider.radius = active ? shotgunColliderMultiplier : originalColliderRadius;
+    }
 
     private IEnumerator RevertToDefaultCrosshair()
     {
-        // Wait for the specified duration
         yield return new WaitForSeconds(shotgunCrosshairDuration);
 
-        // Flag
-        isShotgunActive = false; 
-
-        // Revert to the default crosshair
-        reticleRenderer.sprite = defaultCrosshair;
-
-        // Reset collider radius back to the original
-        playerCollider.radius = originalColliderRadius;
+        photonView.RPC("SyncShotgunActivation", RpcTarget.All, false);
     }
 
     public void ActivateTemporaryBulletPowerup()
@@ -185,20 +188,52 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator BulletPowerupCoroutine()
     {
-        float originalBulletMax = bulletMax;                                                // Save the original max bullet count
-        bulletMax = 10;                                                                     // Increase max bullets to 10
-        bulletCount = bulletMax;                                                            // Refill bullets
-        Debug.Log("Bullet power-up activated! Max bullets increased to: " + bulletMax);
+        float originalBulletMax = bulletMax;
+        bulletMax = 10; // Increase to 10
+        bulletCount = bulletMax; // Refill bullets
 
-        yield return new WaitForSeconds(10f);                                               // Wait for 10 seconds
+        photonView.RPC("SyncBulletPowerup", RpcTarget.All, bulletMax);
 
-        bulletMax = originalBulletMax;                                                      // Revert to original max bullets
-        Debug.Log("Bullet power-up ended. Max bullets reverted to: " + bulletMax);
+        Debug.Log($"Bullet power-up activated! Max bullets: {bulletMax}");
 
-                                                                                            // If the current bullets exceed the original max, reduce them
+        yield return new WaitForSeconds(10f);
+
+        bulletMax = originalBulletMax;
+        photonView.RPC("SyncBulletPowerup", RpcTarget.All, bulletMax);
+
+        Debug.Log($"Bullet power-up ended. Max bullets reverted to: {bulletMax}");
+
         if (bulletCount > bulletMax)
         {
             bulletCount = bulletMax;
+        }
+    }
+
+    [PunRPC]
+    private void SyncBulletPowerup(float newBulletMax)
+    {
+        bulletMax = newBulletMax;
+        if (bulletCount > bulletMax)
+        {
+            bulletCount = bulletMax;
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+            stream.SendNext(bulletCount);
+            stream.SendNext(isShotgunActive);
+        }
+        else
+        {
+            networkPosition = (Vector3)stream.ReceiveNext();
+            networkRotation = (Quaternion)stream.ReceiveNext();
+            bulletCount = (float)stream.ReceiveNext();
+            isShotgunActive = (bool)stream.ReceiveNext();
         }
     }
 }
