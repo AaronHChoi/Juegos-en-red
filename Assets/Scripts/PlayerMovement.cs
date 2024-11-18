@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Target"))
+        if (other.gameObject.CompareTag("Target") || other.gameObject.CompareTag("ShotgunPowerup") || other.gameObject.CompareTag("BulletPowerup"))
         {
             var target = other.GetComponent<TargetStats>();
             if (target != null && !collidingTargets.Contains(target))
@@ -121,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Target"))
+        if (other.gameObject.CompareTag("Target") || other.gameObject.CompareTag("ShotgunPowerup") || other.gameObject.CompareTag("BulletPowerup"))
         {
             var target = other.GetComponent<TargetStats>();
             if (target != null)
