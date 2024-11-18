@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetStats : MonoBehaviour
@@ -31,16 +30,31 @@ public class TargetStats : MonoBehaviour
 
     public void Hit()
     {
-        Debug.Log("hit");
+        Debug.Log("Hit detected on target with tag: " + gameObject.tag);
 
         if (gameObject.CompareTag("ShotgunPowerup"))
         {
-            // Special effect logic for ShotgunPowerup
             ActivateShotgunPowerup();
+        }
+        else if (gameObject.CompareTag("BulletPowerup"))
+        {
+            ActivateBulletPowerup();
         }
 
         DisableTarget();
         targetManager.RespawnTarget(gameObject);
+    }
+
+    private void ActivateShotgunPowerup()
+    {
+        Debug.Log("Shotgun power-up activated!");
+        FindObjectOfType<PlayerMovement>().ActivateShotgunReticle();
+    }
+
+    private void ActivateBulletPowerup()
+    {
+        Debug.Log("Bullet power-up activated!");
+        FindObjectOfType<PlayerMovement>().ActivateTemporaryBulletPowerup();
     }
 
     private void DisableTarget()
@@ -66,12 +80,4 @@ public class TargetStats : MonoBehaviour
             boxCollider.enabled = true;
         }
     }
-
-    private void ActivateShotgunPowerup()
-    {
-        Debug.Log("Shotgun power-up activated!");
-        FindObjectOfType<PlayerMovement>().ActivateShotgunReticle();
-    }
-
-
 }
