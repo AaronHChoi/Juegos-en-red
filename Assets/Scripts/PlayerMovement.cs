@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isCollidingWithTarget = false;
     private TargetStats targetStats;
+    private List<TargetStats> collidingTargets = new List<TargetStats>();
+
 
     public float bulletCount;
     public float bulletMax = 6;
@@ -33,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isReloading = false;
 
     public int points;
+
 
 
     private void Start()
@@ -76,57 +80,41 @@ public class PlayerMovement : MonoBehaviour
 
     private void Shoot()
     {
-        // limit shooting
-        if (bulletCount > 0)
+        if (bulletCount > 0 && Mouse.current.leftButton.wasPressedThisFrame)
         {
+            soundManager.PlaySound(isShotgunActive ? "ShotgunShotSound" : "ShotSound");
 
-            if (Mouse.current.leftButton.wasPressedThisFrame && isCollidingWithTarget)
+            if (collidingTargets.Count > 0)
             {
-                if (isShotgunActive)
+                foreach (var target in collidingTargets.ToList()) // Use ToList() to avoid modification during iteration
                 {
-                    soundManager.PlaySound("ShotgunShotSound");
-                }
-                else
-                {
-                    soundManager.PlaySound("ShotSound");
-                }
-
-                points++;
-                bulletCount--;
-                Debug.Log("Hit. Current Bullets: " + bulletCount);
-
-                if (targetStats != null)
-                {
-                    targetStats.Hit();
+                    target.Hit(); // Apply the hit effect to the target
+                    points++;
                 }
             }
-            else if (Mouse.current.leftButton.wasPressedThisFrame && !isCollidingWithTarget)
+            else
             {
-                if (isShotgunActive)
-                {
-                    soundManager.PlaySound("ShotgunShotSound");
-                }
-                else
-                {
-                    soundManager.PlaySound("ShotSound");
-                }
-
-                bulletCount--;
-                Debug.Log("Miss. Current Bullets: " + bulletCount);
+                Debug.Log("Missed! No targets in range.");
             }
-        }
-        else
-        {
-            //Debug.Log("No bullets left!");
+
+            bulletCount--;
+            Debug.Log("Shot fired. Remaining bullets: " + bulletCount);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Target") || other.gameObject.CompareTag("ShotgunPowerup"))
+        if (other.gameObject.CompareTag("Target"))
         {
-            isCollidingWithTarget = true;
-            targetStats = other.GetComponent<TargetStats>();
+            var target = other.GetComponent<TargetStats>();
+            if (target != null && !collidingTargets.Contains(target))
+            {
+                collidingTargets.Add(target);
+            }
+        }
+        else if (other.gameObject.CompareTag("ShotgunPowerup"))
+        {
+            // Handle shotgun power-up activation here if needed
         }
     }
 
@@ -135,8 +123,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Target"))
         {
-            isCollidingWithTarget = false;
-            targetStats = null;
+            var target = other.GetComponent<TargetStats>();
+            if (target != null)
+            {
+                collidingTargets.Remove(target);
+            }
         }
     }
 

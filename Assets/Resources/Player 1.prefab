@@ -243,4 +243,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMovement: {fileID: 3398244954033453771}
-  camera: {fileID: 2125607648107849270}
