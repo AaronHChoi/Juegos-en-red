@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7294280594104320225}
   - component: {fileID: 6297583114869292406}
-  - component: {fileID: 3398244954033453771}
   - component: {fileID: 855755392408059769}
   - component: {fileID: 4266428477962811543}
+  - component: {fileID: 3398244954033453771}
   - component: {fileID: 3025077318328740154}
-  - component: {fileID: 3568766970232588737}
   - component: {fileID: 5334821840666358512}
   - component: {fileID: 989314431160874140}
   m_Layer: 0
@@ -91,27 +90,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3398244954033453771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2125607648107849270}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ad8c6d1f3d35d94b89b632350b4f314, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultCrosshair: {fileID: 21300000, guid: b8e78032f8af0954784d1fe9e5a09187, type: 3}
-  shotgunCrosshair: {fileID: 21300000, guid: e7e80d39e3e102147a3be13caa7cd3d7, type: 3}
-  shotgunCrosshairDuration: 4
-  shotgunColliderMultiplier: 4
-  movSpeed: 1
-  bulletCount: 6
-  bulletMax: 6
-  reloadTime: 0.5
-  points: 0
 --- !u!58 &855755392408059769
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -170,10 +148,31 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &3398244954033453771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125607648107849270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad8c6d1f3d35d94b89b632350b4f314, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCrosshair: {fileID: 21300000, guid: b8e78032f8af0954784d1fe9e5a09187, type: 3}
+  shotgunCrosshair: {fileID: 21300000, guid: e7e80d39e3e102147a3be13caa7cd3d7, type: 3}
+  shotgunCrosshairDuration: 4
+  shotgunColliderMultiplier: 4
+  movSpeed: 1
+  bulletCount: 6
+  bulletMax: 6
+  reloadTime: 0.5
+  points: 0
 --- !u!114 &3025077318328740154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,30 +190,14 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
   - {fileID: 3398244954033453771}
-  - {fileID: 3568766970232588737}
+  - {fileID: 0}
   - {fileID: 5334821840666358512}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &3568766970232588737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2125607648107849270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 0
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 1
-  m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &5334821840666358512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
+  m_SynchronizeRotation: 0
   m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!114 &989314431160874140

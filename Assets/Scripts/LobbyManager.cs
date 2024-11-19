@@ -6,20 +6,7 @@ using Photon.Realtime;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    void Start()
-    {
-        Connect();
-    }
-
-    private void Awake()
-    {
-        PhotonNetwork.AutomaticallySyncScene = true;
-    }
-
-    public void Connect()
-    {
-        PhotonNetwork.ConnectUsingSettings();
-    }
+    public int requiredPlayers = 2; // Number of players required to start the game
 
     public void Play()
     {
@@ -30,16 +17,29 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("No room available, creating a new room");
 
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 2 });
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = (byte)requiredPlayers });
     }
 
     public override void OnJoinedRoom()
     {
         Debug.Log("Joined room");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.LoadLevel("GameScene");
-        }
+        CheckPlayers();
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"Player {newPlayer.NickName} has joined the room.");
+        CheckPlayers();
+    }
+
+    private void CheckPlayers()
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount == requiredPlayers)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.LoadLevel("GameScene");
+            }
+        }
+    }
 }

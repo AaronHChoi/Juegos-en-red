@@ -155,13 +155,15 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
 
     public void ActivateShotgunReticle()
     {
+        if (!photonView.IsMine) return;
+
         isShotgunActive = true;
         reticleRenderer.sprite = shotgunCrosshair;
 
-        playerCollider.radius = shotgunColliderMultiplier;
+        playerCollider.radius = originalColliderRadius * shotgunColliderMultiplier;
 
         // Broadcast shotgun activation
-        photonView.RPC("SyncShotgunActivation", RpcTarget.All, true);
+        photonView.RPC("SyncShotgunActivation", RpcTarget.OthersBuffered, true);
 
         StartCoroutine(RevertToDefaultCrosshair());
     }
@@ -171,18 +173,27 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     {
         isShotgunActive = active;
         reticleRenderer.sprite = active ? shotgunCrosshair : defaultCrosshair;
-        playerCollider.radius = active ? shotgunColliderMultiplier : originalColliderRadius;
+        playerCollider.radius = active ? originalColliderRadius * shotgunColliderMultiplier : originalColliderRadius;
     }
 
     private IEnumerator RevertToDefaultCrosshair()
     {
         yield return new WaitForSeconds(shotgunCrosshairDuration);
 
-        photonView.RPC("SyncShotgunActivation", RpcTarget.All, false);
+        if (photonView.IsMine)
+        {
+            isShotgunActive = false;
+            reticleRenderer.sprite = defaultCrosshair;
+            playerCollider.radius = originalColliderRadius;
+
+            photonView.RPC("SyncShotgunActivation", RpcTarget.OthersBuffered, false);
+        }
     }
 
     public void ActivateTemporaryBulletPowerup()
     {
+        if (!photonView.IsMine) return;
+
         StartCoroutine(BulletPowerupCoroutine());
     }
 
@@ -192,14 +203,14 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         bulletMax = 10; // Increase to 10
         bulletCount = bulletMax; // Refill bullets
 
-        photonView.RPC("SyncBulletPowerup", RpcTarget.All, bulletMax);
+        photonView.RPC("SyncBulletPowerup", RpcTarget.OthersBuffered, bulletMax);
 
         Debug.Log($"Bullet power-up activated! Max bullets: {bulletMax}");
 
         yield return new WaitForSeconds(10f);
 
         bulletMax = originalBulletMax;
-        photonView.RPC("SyncBulletPowerup", RpcTarget.All, bulletMax);
+        photonView.RPC("SyncBulletPowerup", RpcTarget.OthersBuffered, bulletMax);
 
         Debug.Log($"Bullet power-up ended. Max bullets reverted to: {bulletMax}");
 
@@ -218,6 +229,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
             bulletCount = bulletMax;
         }
     }
+
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

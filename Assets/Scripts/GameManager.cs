@@ -2,43 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager instance; // Singleton instance
     public GameObject playerPrefab;
+    public GameObject playerPrefab2;
     [Space]
-    public Transform spawnPoint;
+    public Transform[] spawnPoints; // Array of spawn points for players
 
     void Awake()
     {
-        // Singleton pattern
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        // Ensure Photon Network is ready
-        if (!PhotonNetwork.IsConnected)
-        {
-            Debug.LogError("Photon Network is not connected. Returning to main menu...");
-            // Add logic to return to the main menu or handle disconnection
-            return;
-        }
+        // Automatically sync scene for all players
+        PhotonNetwork.AutomaticallySyncScene = true;
 
-        // Validate player prefab and spawn point
-        if (playerPrefab == null || spawnPoint == null)
+        // Validate prefabs and spawn points
+        if (playerPrefab == null || playerPrefab2 == null || spawnPoints.Length == 0)
         {
-            Debug.LogError("PlayerPrefab or SpawnPoint is not assigned in GameManager.");
+            Debug.LogError("PlayerPrefabs or spawn points are not assigned in GameManager.");
             return;
         }
 
@@ -50,17 +48,38 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Spawning player...");
 
-        GameObject _player = PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, Quaternion.identity);
+        // Determine the spawn point and prefab for this player
+        int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1; // ActorNumber starts at 1
+        Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
+        string prefabName = (playerIndex == 0) ? playerPrefab.name : playerPrefab2.name;
 
-        // Check if the player has the necessary setup components
-        PlayerSetup playerSetup = _player.GetComponent<PlayerSetup>();
-        if (playerSetup != null)
+        // Instantiate the player prefab across the network
+        GameObject player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", prefabName), spawnPoint.position, Quaternion.identity);
+
+        Debug.Log($"Player {PhotonNetwork.LocalPlayer.NickName} spawned at {spawnPoint.position}");
+
+        // Check if the player object is instantiated correctly
+        if (player == null)
         {
-            playerSetup.IsLocalPlayer(); // Setup local player
+            Debug.LogError("Failed to instantiate player prefab.");
         }
-        else
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"Player {newPlayer.NickName} has joined the room.");
+
+        // Handle any additional logic when a player joins, such as syncing game state
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"Player {otherPlayer.NickName} has left the room.");
+
+        // Load the main menu scene for the remaining player
+        if (PhotonNetwork.IsMasterClient)
         {
-            Debug.LogError("Player prefab is missing the PlayerSetup script!");
+            PhotonNetwork.LoadLevel("LobbyScene");
         }
     }
 }

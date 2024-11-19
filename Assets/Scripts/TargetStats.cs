@@ -1,9 +1,8 @@
-using Photon.Pun;
 using UnityEngine;
+using Photon.Pun;
 
 public class TargetStats : MonoBehaviourPunCallbacks
 {
-    public int Points = 10;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
     private TargetManager targetManager;
@@ -75,4 +74,3 @@ public class TargetStats : MonoBehaviourPunCallbacks
         }
     }
 }
-
