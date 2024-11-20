@@ -21,37 +21,40 @@ public class TargetStats : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Hit()
+    public void Hit(int playerViewID)
     {
-        photonView.RPC("HandleHit", RpcTarget.All); // Sync hit across all players
+        photonView.RPC("HandleHit", RpcTarget.All, playerViewID);
     }
 
     [PunRPC]
-    private void HandleHit()
+    private void HandleHit(int playerViewID)
     {
         Debug.Log("Hit detected on target with tag: " + gameObject.tag);
 
+        PlayerMovement player = PhotonView.Find(playerViewID)?.GetComponent<PlayerMovement>();
+        if (player == null)
+        {
+            Debug.LogError("PlayerMovement not found for PhotonView ID: " + playerViewID);
+            return;
+        }
+
         if (gameObject.CompareTag("ShotgunPowerup"))
         {
-            FindObjectOfType<PlayerMovement>()?.ActivateShotgunReticle();
+            player.ActivateShotgunReticle();
         }
         else if (gameObject.CompareTag("BulletPowerup"))
         {
-            FindObjectOfType<PlayerMovement>()?.ActivateTemporaryBulletPowerup();
+            player.ActivateTemporaryBulletPowerup();
         }
 
         DisableTarget();
 
-        // Safely call RespawnTarget
         if (GameManager.instance != null)
         {
             GameManager.instance.RespawnTarget(gameObject);
         }
-        else
-        {
-            Debug.LogError("GameManager instance is null in HandleHit.");
-        }
     }
+
 
     private void DisableTarget()
     {

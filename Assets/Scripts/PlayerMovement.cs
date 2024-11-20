@@ -88,10 +88,9 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
             {
                 foreach (var target in collidingTargets.ToArray())
                 {
-                    target.Hit();
+                    target.Hit(photonView.ViewID); // Pass the player's PhotonView ID
                     points++;
 
-                    // Report score to GameManager
                     if (GameManager.instance != null)
                     {
                         GameManager.instance.AddScore(GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer), points);
@@ -106,13 +105,13 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
             bulletCount--;
             Debug.Log($"Shot fired. Remaining bullets: {bulletCount}");
 
-            // Update UI via GameManager
             if (GameManager.instance != null)
             {
                 GameManager.instance.UpdateBulletCount(GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer), bulletCount);
             }
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -170,6 +169,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     public void ActivateShotgunReticle()
     {
         if (!photonView.IsMine) return;
+
+        Debug.Log("Shotgun power-up activated for player: " + PhotonNetwork.LocalPlayer.NickName);
 
         isShotgunActive = true;
         reticleRenderer.sprite = shotgunCrosshair;
