@@ -9,11 +9,11 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     private SoundManager soundManager;
     private SpriteRenderer reticleRenderer;
 
-    public Sprite defaultCrosshair; // Default crosshair sprite
-    public Sprite shotgunCrosshair; // Shotgun crosshair sprite
-    public float shotgunCrosshairDuration = 4f; // Duration for shotgun crosshair
-    public float shotgunColliderMultiplier = 4f; // Multiplier for shotgun collider size
-    private bool isShotgunActive = false; // Tracks if shotgun power-up is active
+    public Sprite defaultCrosshair;
+    public Sprite shotgunCrosshair;
+    public float shotgunCrosshairDuration = 4f;
+    public float shotgunColliderMultiplier = 4f;
+    private bool isShotgunActive = false;
     private CircleCollider2D playerCollider;
     private float originalColliderRadius;
 
@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
-        if (!photonView.IsMine) return; // Only local player controls its behavior
+        if (!photonView.IsMine) return;
 
         MouseMovement();
 
@@ -56,6 +56,19 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         Shoot();
+    }
+
+    private void FixedUpdate()
+    {
+        if (photonView.IsMine)
+        {
+            transform.position = position;
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * 10);
+            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.fixedDeltaTime * 10);
+        }
     }
 
     private void MouseMovement()
@@ -69,15 +82,20 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (bulletCount > 0 && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            // Sync the shot sound across all players
             photonView.RPC("PlayShotSound", RpcTarget.All, isShotgunActive);
 
             if (collidingTargets.Count > 0)
             {
                 foreach (var target in collidingTargets.ToArray())
                 {
-                    target.Hit(); // Apply the hit effect
+                    target.Hit();
                     points++;
+
+                    // Report score to GameManager
+                    if (GameManager.instance != null)
+                    {
+                        GameManager.instance.AddScore(GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer), points);
+                    }
                 }
             }
             else
@@ -87,6 +105,12 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
 
             bulletCount--;
             Debug.Log($"Shot fired. Remaining bullets: {bulletCount}");
+
+            // Update UI via GameManager
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.UpdateBulletCount(GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer), bulletCount);
+            }
         }
     }
 
@@ -104,8 +128,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-
-
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Target") ||
@@ -120,24 +142,10 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-
     [PunRPC]
     private void PlayShotSound(bool shotgunActive)
     {
         soundManager.PlaySound(shotgunActive ? "ShotgunShotSound" : "ShotSound");
-    }
-
-    private void FixedUpdate()
-    {
-        if (photonView.IsMine)
-        {
-            transform.position = position;
-        }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * 10);
-            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.fixedDeltaTime * 10);
-        }
     }
 
     private IEnumerator ReloadOneBullet()
@@ -148,6 +156,12 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         if (bulletCount < bulletMax)
         {
             bulletCount++;
+
+            // Update UI via GameManager
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.UpdateBulletCount(GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer), bulletCount);
+            }
         }
 
         isReloading = false;
@@ -161,8 +175,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         reticleRenderer.sprite = shotgunCrosshair;
 
         playerCollider.radius = originalColliderRadius * shotgunColliderMultiplier;
-
-        // Broadcast shotgun activation
         photonView.RPC("SyncShotgunActivation", RpcTarget.OthersBuffered, true);
 
         StartCoroutine(RevertToDefaultCrosshair());
@@ -200,36 +212,27 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     private IEnumerator BulletPowerupCoroutine()
     {
         float originalBulletMax = bulletMax;
-        bulletMax = 10; // Increase to 10
-        bulletCount = bulletMax; // Refill bullets
+        bulletMax = 10;
+        bulletCount = bulletMax;
 
         photonView.RPC("SyncBulletPowerup", RpcTarget.OthersBuffered, bulletMax);
 
-        Debug.Log($"Bullet power-up activated! Max bullets: {bulletMax}");
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.UpdateBulletCount(PhotonNetwork.LocalPlayer.ActorNumber - 1, bulletCount);
+        }
 
         yield return new WaitForSeconds(10f);
 
         bulletMax = originalBulletMax;
+
         photonView.RPC("SyncBulletPowerup", RpcTarget.OthersBuffered, bulletMax);
 
-        Debug.Log($"Bullet power-up ended. Max bullets reverted to: {bulletMax}");
-
         if (bulletCount > bulletMax)
         {
             bulletCount = bulletMax;
         }
     }
-
-    [PunRPC]
-    private void SyncBulletPowerup(float newBulletMax)
-    {
-        bulletMax = newBulletMax;
-        if (bulletCount > bulletMax)
-        {
-            bulletCount = bulletMax;
-        }
-    }
-
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

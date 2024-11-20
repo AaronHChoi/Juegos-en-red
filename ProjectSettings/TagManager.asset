@@ -10,6 +10,7 @@ TagManager:
   - ShotgunPowerup
   - Bullet
   - BulletPowerup
+  - GoldTarget
   layers:
   - Default
   - TransparentFX

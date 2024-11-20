@@ -45,6 +45,9 @@ MonoBehaviour:
   - SyncBulletPowerup
   - SyncShotgunActivation
   - HandleRespawn
+  - UpdateScore
+  - SyncBulletCount
+  - DisplayEndGame
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

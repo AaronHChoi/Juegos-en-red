@@ -5,13 +5,11 @@ public class TargetStats : MonoBehaviourPunCallbacks
 {
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
-    private TargetManager targetManager;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider2D>();
-        targetManager = FindObjectOfType<TargetManager>();
 
         if (spriteRenderer == null)
         {
@@ -20,10 +18,6 @@ public class TargetStats : MonoBehaviourPunCallbacks
         if (boxCollider == null)
         {
             Debug.LogError("BoxCollider2D component is missing on " + gameObject.name);
-        }
-        if (targetManager == null)
-        {
-            Debug.LogError("TargetManager is not found in the scene.");
         }
     }
 
@@ -39,15 +33,24 @@ public class TargetStats : MonoBehaviourPunCallbacks
 
         if (gameObject.CompareTag("ShotgunPowerup"))
         {
-            FindObjectOfType<PlayerMovement>().ActivateShotgunReticle();
+            FindObjectOfType<PlayerMovement>()?.ActivateShotgunReticle();
         }
         else if (gameObject.CompareTag("BulletPowerup"))
         {
-            FindObjectOfType<PlayerMovement>().ActivateTemporaryBulletPowerup();
+            FindObjectOfType<PlayerMovement>()?.ActivateTemporaryBulletPowerup();
         }
 
         DisableTarget();
-        targetManager.RespawnTarget(gameObject); // Respawn the target
+
+        // Safely call RespawnTarget
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.RespawnTarget(gameObject);
+        }
+        else
+        {
+            Debug.LogError("GameManager instance is null in HandleHit.");
+        }
     }
 
     private void DisableTarget()
