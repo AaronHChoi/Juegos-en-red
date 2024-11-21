@@ -36,6 +36,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     private float gameTimer = 30f; // Game timer
     private bool gameActive = true;
 
+    [Space]
+    public GameObject EndGamePanel;
+    public TMPro.TMP_Text WinnerText;
+    public TMPro.TMP_Text ScoresText;
+
     void Awake()
     {
         if (instance == null)
@@ -45,7 +50,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
             return;
         }
     }
@@ -199,8 +204,21 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void DisplayEndGame(string winner, int score1, int score2)
     {
-        // Show the winner on the canvas (replace with actual UI implementation)
-        Debug.Log($"Game Over! {winner}");
-        Debug.Log($"Final Scores - Player 1: {score1}, Player 2: {score2}");
+        // Display the winner's name
+        WinnerText.text = $"{winner}";
+
+        // Display the final scores
+        ScoresText.text = $"Player 1: {score1} | Player 2: {score2}";
+
+        // Show the end-game panel
+        EndGamePanel.SetActive(true);
+    }
+
+    public void ReturnToLobby()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("LobbyScene");
+        }
     }
 }

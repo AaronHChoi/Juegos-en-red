@@ -6,6 +6,8 @@ public class TargetStats : MonoBehaviourPunCallbacks
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
 
+    private bool isHit = false;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -23,6 +25,9 @@ public class TargetStats : MonoBehaviourPunCallbacks
 
     public void Hit(int playerViewID)
     {
+        if (isHit) return; // Prevent multiple hits
+        isHit = true;
+
         photonView.RPC("HandleHit", RpcTarget.All, playerViewID);
     }
 
@@ -34,7 +39,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
         PlayerMovement player = PhotonView.Find(playerViewID)?.GetComponent<PlayerMovement>();
         if (player == null)
         {
-            Debug.LogError("PlayerMovement not found for PhotonView ID: " + playerViewID);
+            Debug.LogError($"PlayerMovement not found for PhotonView ID: {playerViewID}");
             return;
         }
 
@@ -70,6 +75,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
 
     public void EnableTarget()
     {
+        isHit = false; // Reset the hit flag
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = true;

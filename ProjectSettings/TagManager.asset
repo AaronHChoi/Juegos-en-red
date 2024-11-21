@@ -11,6 +11,7 @@ TagManager:
   - Bullet
   - BulletPowerup
   - GoldTarget
+  - WeaponJam
   layers:
   - Default
   - TransparentFX
