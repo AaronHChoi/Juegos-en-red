@@ -56,13 +56,13 @@ public class TargetStats : MonoBehaviourPunCallbacks
             PlayerMovement otherPlayer = FindOtherPlayer(playerViewID);
             if (otherPlayer != null)
             {
-                otherPlayer.ApplyDebuff(3);
+                otherPlayer.photonView.RPC("ApplyDebuff", RpcTarget.AllBuffered, 3);
                 Debug.Log("Debuff Powerup hit! Other player loses 3 bullets.");
             }
         }
         else if (gameObject.CompareTag("GoldenTarget"))
         {
-            player.PlayerAddScore(10);
+            player.PlayerAddScore(9);
             Debug.Log("Golden Target hit! 10 points awarded.");
         }
 
@@ -77,10 +77,8 @@ public class TargetStats : MonoBehaviourPunCallbacks
 
     private PlayerMovement FindOtherPlayer(int shooterViewID)
     {
-        // Use the existing method to get all PhotonViews
         PhotonView[] photonViews = Object.FindObjectsOfType<PhotonView>();
 
-        // Iterate through the views
         foreach (PhotonView view in photonViews)
         {
             if (view.ViewID != shooterViewID && view.GetComponent<PlayerMovement>() != null)
@@ -88,7 +86,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
                 return view.GetComponent<PlayerMovement>();
             }
         }
-        return null; // Return null if no other player is found
+        return null;
     }
 
 

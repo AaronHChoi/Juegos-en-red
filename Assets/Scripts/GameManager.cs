@@ -203,7 +203,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-
     // End game logic
 
     private void EndGame()
@@ -218,21 +217,33 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void DisplayEndGame(string winner, int score1, int score2)
     {
-        // Display the winner's name
         WinnerText.text = $"{winner}";
 
-        // Display the final scores
         ScoresText.text = $"Player 1: {score1} | Player 2: {score2}";
 
-        // Show the end-game panel
         EndGamePanel.SetActive(true);
     }
 
     public void ReturnToLobby()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.LoadLevel("LobbyScene");
+            PhotonNetwork.LeaveRoom();
+        }
+        else
+        {
+            LoadLobbyScene();
         }
     }
+    public override void OnLeftRoom()
+    {
+        LoadLobbyScene();
+    }
+
+    private void LoadLobbyScene()
+    {
+        PhotonNetwork.LoadLevel("LobbyScene"); 
+        Debug.Log("Returned to the lobby.");
+    }
+
 }

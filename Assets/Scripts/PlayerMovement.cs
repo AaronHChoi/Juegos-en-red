@@ -58,18 +58,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         Shoot();
     }
 
-    //private void FixedUpdate()
-    //{
-    //    if (photonView.IsMine)
-    //    {
-    //        transform.position = position;
-    //    }
-    //    else
-    //    {
-    //        transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * 10);
-    //        transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.fixedDeltaTime * 10);
-    //    }
-    //}
 
     private void FixedUpdate()
     {
@@ -136,7 +124,9 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (other.gameObject.CompareTag("Target") ||
             other.gameObject.CompareTag("ShotgunPowerup") ||
-            other.gameObject.CompareTag("BulletPowerup"))
+            other.gameObject.CompareTag("BulletPowerup") ||
+            other.gameObject.CompareTag("DebuffPowerup") ||
+            other.gameObject.CompareTag("GoldenTarget"))
         {
             var target = other.GetComponent<TargetStats>();
             if (target != null && !collidingTargets.Contains(target))
@@ -150,7 +140,9 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (other.gameObject.CompareTag("Target") ||
             other.gameObject.CompareTag("ShotgunPowerup") ||
-            other.gameObject.CompareTag("BulletPowerup"))
+            other.gameObject.CompareTag("BulletPowerup") ||
+            other.gameObject.CompareTag("DebuffPowerup") ||
+            other.gameObject.CompareTag("GoldenTarget"))
         {
             var target = other.GetComponent<TargetStats>();
             if (target != null)
