@@ -25,7 +25,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
 
     public void Hit(int playerViewID)
     {
-        if (isHit) return; // Prevent multiple hits
+        if (isHit) return;
         isHit = true;
 
         photonView.RPC("HandleHit", RpcTarget.All, playerViewID);
@@ -51,6 +51,21 @@ public class TargetStats : MonoBehaviourPunCallbacks
         {
             player.ActivateTemporaryBulletPowerup();
         }
+        else if (gameObject.CompareTag("DebuffPowerup"))
+        {
+            PlayerMovement otherPlayer = FindOtherPlayer(playerViewID);
+            if (otherPlayer != null)
+            {
+                otherPlayer.ApplyDebuff(3);
+                Debug.Log("Debuff Powerup hit! Other player loses 3 bullets.");
+            }
+        }
+        else if (gameObject.CompareTag("GoldenTarget"))
+        {
+            player.PlayerAddScore(10);
+            Debug.Log("Golden Target hit! 10 points awarded.");
+        }
+
 
         DisableTarget();
 
@@ -59,6 +74,25 @@ public class TargetStats : MonoBehaviourPunCallbacks
             GameManager.instance.RespawnTarget(gameObject);
         }
     }
+
+    private PlayerMovement FindOtherPlayer(int shooterViewID)
+    {
+        // Use the existing method to get all PhotonViews
+        PhotonView[] photonViews = Object.FindObjectsOfType<PhotonView>();
+
+        // Iterate through the views
+        foreach (PhotonView view in photonViews)
+        {
+            if (view.ViewID != shooterViewID && view.GetComponent<PlayerMovement>() != null)
+            {
+                return view.GetComponent<PlayerMovement>();
+            }
+        }
+        return null; // Return null if no other player is found
+    }
+
+
+
 
 
     private void DisableTarget()

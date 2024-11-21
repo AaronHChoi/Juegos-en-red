@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 9002912078066913372}
   - component: {fileID: 7795202595121184655}
   m_Layer: 0
-  m_Name: GoldTarget
-  m_TagString: GoldTarget
+  m_Name: GoldenTarget
+  m_TagString: GoldenTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

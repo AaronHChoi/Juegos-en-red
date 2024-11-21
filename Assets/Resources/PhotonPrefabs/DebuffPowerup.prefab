@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 9124038039365371010}
   - component: {fileID: 4583444062435943680}
   m_Layer: 0
-  m_Name: WeaponJam
-  m_TagString: ShotgunPowerup
+  m_Name: DebuffPowerup
+  m_TagString: DebuffPowerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

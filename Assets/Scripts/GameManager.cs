@@ -14,28 +14,24 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform[] spawnPoints;
     [Space]
     public List<GameObject> targets; // List of all targets
-
     public float respawnTimeVariance = 1f; // Respawn variance
     public float respawnTimeVariance2 = 3f;
     public float shotgunRespawnTime = 15f; // Cooldown for Shotgun Powerup
     public float bulletPowerupRespawnTime = 15f; // Cooldown for Bullet Powerup
-
+    public float debuffPowerupRespawnTime = 15f; // Cooldown for Debuff Powerup
     private Dictionary<GameObject, Vector3> targetPositions; // Original positions of targets
     [Space]
     public TMPro.TMP_Text scoreTextPlayer1; // Score display for Player 1
     public TMPro.TMP_Text scoreTextPlayer2; // Score display for Player 2
     public TMPro.TMP_Text timerText; // Timer display
-
     private int scorePlayer1 = 0; // Player 1 score
     private int scorePlayer2 = 0; // Player 2 score
     [Space]
     public TMPro.TMP_Text bulletCountPlayer1Text; // UI for Player 1's bullets
     public TMPro.TMP_Text bulletCountPlayer2Text; // UI for Player 2's bullets
     [Space]
-
     private float gameTimer = 30f; // Game timer
     private bool gameActive = true;
-
     [Space]
     public GameObject EndGamePanel;
     public TMPro.TMP_Text WinnerText;
@@ -114,7 +110,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void UpdateBulletCount(int playerIndex, float bulletCount)
     {
-        photonView.RPC("SyncBulletCount", RpcTarget.All, playerIndex, bulletCount); // Broadcast update to all players
+        photonView.RPC("SyncBulletCount", RpcTarget.All, playerIndex, bulletCount);
     }
 
     [PunRPC]
@@ -137,10 +133,19 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         foreach (GameObject target in targets)
         {
-            targetPositions[target] = target.transform.position;
-            target.GetComponent<TargetStats>().EnableTarget();
+            if (target != null)
+            {
+                targetPositions[target] = target.transform.position;
+                target.GetComponent<TargetStats>().EnableTarget();
+                Debug.Log($"Target {target.name} initialized at {target.transform.position}");
+            }
+            else
+            {
+                Debug.LogError("Null target found in the targets list during initialization.");
+            }
         }
     }
+
 
     // Spawn player logic
     private void SpawnPlayer()
@@ -179,23 +184,32 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator RespawnCoroutine(GameObject target)
     {
-        float respawnTime = target.CompareTag("ShotgunPowerup")
-            ? shotgunRespawnTime
-            : target.CompareTag("BulletPowerup")
-                ? bulletPowerupRespawnTime
-                : Random.Range(respawnTimeVariance, respawnTimeVariance2);
+        float respawnTime =
+            target.CompareTag("ShotgunPowerup") ? shotgunRespawnTime :
+            target.CompareTag("BulletPowerup") ? bulletPowerupRespawnTime :
+            target.CompareTag("DebuffPowerup") ? debuffPowerupRespawnTime :
+            Random.Range(respawnTimeVariance, respawnTimeVariance2);
 
         yield return new WaitForSeconds(respawnTime);
 
-        target.GetComponent<TargetStats>().EnableTarget();
-        target.transform.position = targetPositions[target];
+        if (target != null && targetPositions.ContainsKey(target))
+        {
+            target.GetComponent<TargetStats>().EnableTarget();
+            target.transform.position = targetPositions[target];
+        }
+        else
+        {
+            Debug.LogError("Target not found or not registered correctly.");
+        }
     }
+
 
     // End game logic
 
     private void EndGame()
     {
         gameActive = false;
+        Cursor.visible = true;
 
         string winner = scorePlayer1 > scorePlayer2 ? "Player 1 Wins!" : "Player 2 Wins!";
         photonView.RPC("DisplayEndGame", RpcTarget.All, winner, scorePlayer1, scorePlayer2);

@@ -260,13 +260,37 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     {
         bulletMax = newBulletMax;
 
-        // Ensure bullet count doesn't exceed max bullets
         if (bulletCount > bulletMax)
         {
             bulletCount = bulletMax;
         }
 
         Debug.Log($"SyncBulletPowerup: Updated bulletMax to {bulletMax}, current bullets: {bulletCount}");
+    }
+
+    [PunRPC]
+    public void ApplyDebuff(int bulletsToLose)
+    {
+        bulletCount = Mathf.Max(0, bulletCount - bulletsToLose);
+
+        Debug.Log($"Debuff applied! Remaining bullets: {bulletCount}");
+
+        if (GameManager.instance != null)
+        {
+            int playerIndex = GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer);
+            GameManager.instance.UpdateBulletCount(playerIndex, bulletCount);
+        }
+    }
+
+    public void PlayerAddScore(int pointsToAdd)
+    {
+        points += pointsToAdd;
+
+        if (GameManager.instance != null)
+        {
+            int playerIndex = GameManager.instance.GetPlayerIndex(PhotonNetwork.LocalPlayer);
+            GameManager.instance.AddScore(playerIndex, pointsToAdd);
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
