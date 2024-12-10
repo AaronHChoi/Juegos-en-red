@@ -105,6 +105,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
             }
             else
             {
+                soundManager.PlaySound("BulletMiss");
                 Debug.Log("Missed! No targets in range.");
             }
 
@@ -166,6 +167,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
         if (bulletCount < bulletMax)
         {
             bulletCount++;
+            soundManager.PlaySound("ReloadBullet");
+
 
             // Update UI via GameManager
             if (GameManager.instance != null)
@@ -218,6 +221,8 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!photonView.IsMine) return;
 
+        soundManager.PlaySound("Spin");
+
         Debug.Log($"Activating bullet power-up for player: {PhotonNetwork.LocalPlayer.NickName}");
         StartCoroutine(BulletPowerupCoroutine());
     }
@@ -264,6 +269,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks, IPunObservable
     public void ApplyDebuff(int bulletsToLose)
     {
         bulletCount = Mathf.Max(0, bulletCount - bulletsToLose);
+        soundManager.PlaySound("BulletsFalling");
 
         Debug.Log($"Debuff applied! Remaining bullets: {bulletCount}");
 

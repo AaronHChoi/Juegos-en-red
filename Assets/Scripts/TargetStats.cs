@@ -5,6 +5,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
 {
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
+    private SoundManager soundManager;
 
     private bool isHit = false;
 
@@ -12,6 +13,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider2D>();
+        soundManager = FindObjectOfType<SoundManager>();
 
         if (spriteRenderer == null)
         {
@@ -63,6 +65,7 @@ public class TargetStats : MonoBehaviourPunCallbacks
         else if (gameObject.CompareTag("GoldenTarget"))
         {
             player.PlayerAddScore(9);
+            soundManager.PlaySound("Money");
             Debug.Log("Golden Target hit! 10 points awarded.");
         }
 
