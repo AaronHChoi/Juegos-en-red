@@ -14,9 +14,15 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Debug.Log("Connecting to server");
-
-        PhotonNetwork.ConnectUsingSettings();
+        if (PhotonNetwork.IsConnected) 
+        { 
+            OnConnectedToMaster(); 
+        } 
+        else 
+        { 
+            Debug.Log("Connecting to server"); 
+            PhotonNetwork.ConnectUsingSettings(); 
+        }
     }
 
     public override void OnConnectedToMaster()

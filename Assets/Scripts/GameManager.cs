@@ -14,11 +14,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform[] spawnPoints;
     [Space]
     public List<GameObject> targets; // List of all targets
-    public float respawnTimeVariance = 1f; // Respawn variance
+    public float respawnTimeVariance = 1f; 
     public float respawnTimeVariance2 = 3f;
-    public float shotgunRespawnTime = 15f; // Cooldown for Shotgun Powerup
-    public float bulletPowerupRespawnTime = 15f; // Cooldown for Bullet Powerup
-    public float debuffPowerupRespawnTime = 15f; // Cooldown for Debuff Powerup
+    public float shotgunRespawnTime = 15f; 
+    public float bulletPowerupRespawnTime = 15f; 
+    public float debuffPowerupRespawnTime = 15f; 
     private Dictionary<GameObject, Vector3> targetPositions; // Original positions of targets
     [Space]
     public TMPro.TMP_Text scoreTextPlayer1; // Score display for Player 1
@@ -219,7 +219,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         WinnerText.text = $"{winner}";
 
-        ScoresText.text = $"Player 1: {score1} | Player 2: {score2}";
+        ScoresText.text = $"Player 1: {score1}  |  Player 2: {score2}";
 
         EndGamePanel.SetActive(true);
     }
