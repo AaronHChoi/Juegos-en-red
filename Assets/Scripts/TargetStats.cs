@@ -64,9 +64,9 @@ public class TargetStats : MonoBehaviourPunCallbacks
         }
         else if (gameObject.CompareTag("GoldenTarget"))
         {
-            player.PlayerAddScore(9);
+            player.PlayerAddScore(2);
             soundManager.PlaySound("Money");
-            Debug.Log("Golden Target hit! 10 points awarded.");
+            Debug.Log("Golden Target hit! 3 points awarded.");
         }
 
 
